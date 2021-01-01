@@ -9,10 +9,10 @@ public:
 	Trackableobject(int _objectID, centroid c) {
 		this->centroids.push_back(c);
 		this->objectID = _objectID;
-		counted = false;
-		ready_to_counted = false;
 	}
-	Trackableobject() {}
+	Trackableobject() {
+		this->centroids = std::vector<centroid>();
+	}
 
 	~Trackableobject() {}
 

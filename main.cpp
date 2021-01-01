@@ -14,7 +14,6 @@ void tracker_function(std::vector<rect>& rects, const cv::Mat& frame){
         ct->update(rects);
         std::map<int, centroid> objects = ct->objects;
         std::shared_ptr<Trackableobject> to;
-
         for (auto iter = objects.begin(); iter != objects.end(); ++iter) {
             int objectID = iter->first;
             centroid _centroid = iter->second;
@@ -23,17 +22,19 @@ void tracker_function(std::vector<rect>& rects, const cv::Mat& frame){
             if (iter_to == trackableObjects.end()) {
                 to = std::shared_ptr<Trackableobject>(new Trackableobject(objectID, _centroid));
             }
+            else{
+                to = iter_to->second;
+                to->append(_centroid);
+            }
             trackableObjects.insert(std::pair<int, std::shared_ptr<Trackableobject>>(objectID, to));
         }
-
         for(auto iter = trackableObjects.begin(); iter != trackableObjects.end(); ++iter)
         {
             int ObjId = iter->first;
             auto data = iter->second;
-            cv::putText(frame, std::to_string(ObjId), cv::Point(data->centroids.back().y, data->centroids.back().x), 
+
+            cv::putText(frame, std::to_string(ObjId), cv::Point(data->centroids.back().x, data->centroids.back().y), 
             cv::FONT_HERSHEY_TRIPLEX, 0.8, cv::Scalar(0, 255, 0), 1, cv::LINE_AA);
-            //cv::putText(mRawMatLeft, std::to_string(ObjId), cv::Point(data->centroids.back().x, data->centroids.back().y), 
-            //cv::FONT_HERSHEY_TRIPLEX, 0.8, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
 
         }
     }
