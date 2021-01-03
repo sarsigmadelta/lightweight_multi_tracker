@@ -7,14 +7,20 @@ centroidtracker::centroidtracker(int _maxDisappeared, int _maxDistance) {
 	this->maxDistance = _maxDistance;
 }
 
-void centroidtracker::regster(centroid c) {
+void centroidtracker::regster(const centroid c) {
 	this->objects.insert(std::pair<int, centroid>(this->nextObjectID, c));
 	this->disappeared.insert(std::pair<int, int>(this->nextObjectID, 0));
 	nextObjectID++;
 }
 
+void centroidtracker::regsterRect(const rect r){
+	this->objectsOfRect.insert(std::pair<int, rect>(this->nextObjectID, r));
+}
+
+
 void centroidtracker::deregster(int objectID) {
 	this->objects.erase(objectID);
+	this->objectsOfRect.erase(objectID);
 	this->disappeared.erase(objectID);
 }
 
@@ -25,7 +31,7 @@ std::vector<int> centroidtracker::argsort(const std::vector<double>& a) {
 	for (int i = 0; i < Len; i++) {
 		idx[i] = i;
 	}
-	std::sort(idx.begin(), idx.end(), [&a](int i1, int i2) {return a[i1] < a[i2]; });
+	std::sort(idx.begin(), idx.end(), [&a](int i1, int i2) {return a[i1] <= a[i2]; });
 	return idx;
 }
 
@@ -100,6 +106,7 @@ void centroidtracker::update(const std::vector<rect>& rects) {
 	if (this->objects.empty()) {
 		for (auto iter = inputCentroids.begin(); iter != inputCentroids.end(); ++iter) {
 			regster(*iter);
+			regsterRect(rects.at(iter-inputCentroids.begin()));
 		}
 	}
 	else {
@@ -128,6 +135,7 @@ void centroidtracker::update(const std::vector<rect>& rects) {
 			objectID = objectIDs.at(row);
 			//this->objects.insert(std::pair<int, centroid>(objectID, inputCentroids.at(col)));
 			this->objects[objectID] = inputCentroids.at(col);
+			this->objectsOfRect[objectID] = rects.at(col);
 			disappeared[objectID] = 0;
 			usedRows.insert(row);
 			usedCols.insert(col);

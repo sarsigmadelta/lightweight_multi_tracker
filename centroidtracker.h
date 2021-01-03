@@ -7,7 +7,7 @@
 #include <math.h>
 #include <unordered_set>
 #include <opencv2/opencv.hpp>
-
+#include <queue>
 
 struct centroid {
 	int x;
@@ -21,6 +21,8 @@ struct rect
 	int x2;
 	int y2;
 	rect(int _x1, int _y1, int _x2, int _y2) :x1(_x1), y1(_y1), x2(_x2), y2(_y2) {}
+	rect(const rect& r):x1(r.x1), y1(r.y1), x2(r.x2), y2(r.y2){}
+	rect(){}
 	rect(const cv::Rect& r)
 	{
 		x1 = r.x;
@@ -48,7 +50,8 @@ public:
 
 	~centroidtracker() {}
 
-	void regster(centroid c);
+	void regster(const centroid c);
+	void regsterRect(const rect r);
 	void deregster(int objectID);
 	void update(const std::vector<rect>& rects);
 	dataStrip stripForCentroid(const std::map<int, centroid> data);
@@ -60,6 +63,7 @@ public:
 public:
 	int nextObjectID = 0;
 	std::map<int, centroid> objects;
+	std::map<int, rect> objectsOfRect;
 	std::map<int, int> disappeared;
 	int maxDisappeared;
 	int maxDistance;

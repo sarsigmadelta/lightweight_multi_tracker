@@ -41,10 +41,10 @@ typedef struct MWakler
 }MWakler;
 
 
-inline void UpdateRandSpeed(std::shared_ptr<MWakler> walker, const float baseX = 1., const float baseY = 1.)
+inline void UpdateRandSpeed(std::shared_ptr<MWakler> walker, const float baseX = 4., const float baseY = 4.)
 {
-    walker->mSpeed.sX = baseX + 3. - std::rand() % 1000 / 200.;
-    walker->mSpeed.sY = baseY + 3. - std::rand() % 1000 / 200.;
+    walker->mSpeed.sX = baseX + 10. - std::rand() % 1000 / 200.;
+    walker->mSpeed.sY = baseY + 10. - std::rand() % 1000 / 200.;
 }
 
 
